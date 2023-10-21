@@ -5,7 +5,7 @@ info:
     Syarat:
     1. Register
     2. Login
-    3. Ambil Token lalu taruh authorize
+    3. Ambil Token lalu taruh di authorize
   contact:
     email: galuhraka18@gmail.com
   version: 1.0.0
