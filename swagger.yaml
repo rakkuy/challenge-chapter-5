@@ -1,0 +1,670 @@
+openapi: 3.0.3
+info:
+  title: Challenge Chapter 5
+  description: |-
+    Welcome to My Home
+  contact:
+    email: galuhraka18@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/v1
+tags:
+  - name: User
+    description: all about users
+  - name: Account
+    description: all about accounts
+  - name: Transaction
+    description: all about Transaction
+  - name: Authentication
+    description: all about Authentication
+paths:
+  /users:
+    post:
+      tags:
+        - User
+      operationId: create-new-user
+      summary: Create a new user
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/CreateUser"
+      responses:
+        "201":
+          description: Successfull operation
+          $ref: "#/components/responses/CreateUserResp"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BadRequestResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/UnauthorizedResponse"
+    get:
+      tags:
+        - User
+      operationId: get-all-users
+      summary: return list of users
+      responses:
+        "200":
+          $ref: "#/components/responses/GetUsersResp"
+  /users/{userId}:
+    get:
+      tags:
+        - User
+      operationId: get-single-users
+      summary: return detail user
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: The ID of the user to retrieve.
+      responses:
+        "200":
+          description: Successfull operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BasicResponse"
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: "#/components/schemas/UserModel"
+                          - type: object
+                            properties:
+                              profile:
+                                $ref: "#/components/schemas/ProfileModel"
+                          - $ref: "#/components/schemas/DateModel"
+        "404":
+          $ref: "#/components/responses/NotFoundResp"
+    put:
+      tags:
+        - User
+      operationId: update-user
+      summary: update a user profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: The ID of the user to updated.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/ProfileModel"
+      responses:
+        "200":
+          $ref: "#/components/responses/CreateUserResp"
+        "404":
+          $ref: "#/components/responses/NotFoundResp"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/UnauthorizedResponse"
+  /accounts:
+    post:
+      tags:
+        - Account
+      operationId: create-new-account
+      summary: Create a new accounts
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/CreateAccount"
+      responses:
+        "200":
+          $ref: "#/components/responses/CreateNewAccountResp"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BadRequestResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/UnauthorizedResponse"
+    get:
+      tags:
+        - Account
+      operationId: get-all-accounts
+      summary: Get all accounts
+      responses:
+        "200":
+          $ref: "#/components/responses/GetAllAccountsResp"
+  /accounts/{accountId}:
+    get:
+      tags:
+        - Account
+      operationId: get-detail-account
+      summary: Get detail account
+      parameters:
+        - in: path
+          name: accountId
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: The ID of the account to retrieve.
+      responses:
+        "200":
+          $ref: "#/components/responses/GetDetailAccountResp"
+        "404":
+          $ref: "#/components/responses/NotFoundResp"
+  /transactions:
+    post:
+      tags:
+        - Transaction
+      operationId: create-new-transaction
+      summary: Create a new transaction
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/CreateTransaction"
+      responses:
+        "201":
+          description: Successfull operation
+          $ref: "#/components/responses/CreateTransactionResp"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BadRequestResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/UnauthorizedResponse"
+    get:
+      tags:
+        - Transaction
+      operationId: get-all-transaction
+      summary: Get all transaction
+      responses:
+        "200":
+          description: Successfull operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BasicResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          allOf:
+                            - $ref: "#/components/schemas/TransactionModel"
+                            - $ref: "#/components/schemas/DateModel"
+  /transactions/{transactionId}:
+    get:
+      tags:
+        - Transaction
+      operationId: get-detail-transaction
+      summary: Get detail transaction
+      parameters:
+        - in: path
+          name: transactionId
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: The ID of the transaction to retrieve.
+      responses:
+        "200":
+          description: Successfull operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BasicResponse"
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: "#/components/schemas/TransactionModel"
+                          - $ref: "#/components/schemas/DateModel"
+        "404":
+          $ref: "#/components/responses/NotFoundResp"
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      operationId: register
+      summary: Register a new user
+      requestBody:
+        $ref: "#/components/requestBodies/CreateUser"
+      responses:
+        "201":
+          description: Successfull operation
+          $ref: "#/components/responses/CreateUserResp"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BadRequestResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/UnauthorizedResponse"
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      operationId: login
+      summary: Login a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "galuhrakamahendra@mail.com"
+                password:
+                  type: string
+                  example: "examplepassword"
+      responses:
+        "200":
+          description: Successfull operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BasicResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BadRequestResponse"
+  /auth/authenticate:
+    get:
+      tags:
+        - Authentication
+      operationId: authenticate
+      summary: Authenticate a user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successfull operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BasicResponse"
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: "#/components/schemas/UserModel"
+                          - type: object
+                          - properties:
+                              profile:
+                                $ref: "#/components/schemas/ProfileModel"
+
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BadRequestResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/UnauthorizedResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UnauthorizedResponse:
+      title: UnauthorizedResponse
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Unauthorized"
+        data:
+          example: null
+    BasicResponse:
+      title: BasicResponse
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "success"
+    BadRequestResponse:
+      title: BadRequestResponse
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "some error from user"
+        data:
+          example: null
+    DateModel:
+      title: DateModel
+      type: object
+      properties:
+        createdAt:
+          type: string
+          example: "2023-10-15T12:13:48.276Z"
+        updatedAt:
+          type: string
+          example: "2023-10-15T12:13:48.276Z"
+    UserModel:
+      title: User
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "galuhrakamahendra"
+        email:
+          type: string
+          example: "galuhrakamahendra@mail.com"
+    AccountModel:
+      title: Account
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        bank_name:
+          type: string
+          example: "BCA"
+        bank_account_number:
+          type: string
+          example: "1234567890"
+        balance:
+          type: integer
+          example: 1500000
+    ProfileModel:
+      title: Profile
+      type: object
+      properties:
+        identity_type:
+          type: string
+          example: "NO HP"
+        identity_number:
+          type: string
+          example: "08123456789"
+        address:
+          type: string
+          example: "Solo"
+    TransactionModel:
+      title: Transaction
+      type: object
+      properties:
+        amount:
+          type: integer
+          example: 100000
+        source_account_id:
+          type: integer
+          example: 1
+        destination_account_id:
+          type: integer
+          example: 2
+  requestBodies:
+    CreateUser:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "Galuh"
+              email:
+                type: string
+                example: "Galuh@gmail.com"
+              password:
+                type: string
+              identity_type:
+                type: string
+                example: "NO HP"
+              identity_number:
+                type: string
+                example: "08123456789"
+              address:
+                type: string
+                example: "Solo"
+    CreateAccount:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/AccountModel"
+    CreateTransaction:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/TransactionModel"
+  responses:
+    NotFoundResp:
+      description: "Not Found or not matches id"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Not Found"
+              data:
+                example: null
+
+    CreateUserResp:
+      description: "Create user response"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/BasicResponse"
+              - type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/UserModel"
+                      - type: object
+                        properties:
+                          profile:
+                            $ref: "#/components/schemas/ProfileModel"
+                      - $ref: "#/components/schemas/DateModel"
+    GetUsersResp:
+      description: "Get All Users"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/BasicResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserModel"
+    CreateNewAccountResp:
+      description: "Create new a account"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/BasicResponse"
+              - type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/AccountModel"
+                      - $ref: "#/components/schemas/DateModel"
+    GetAllAccountsResp:
+      description: "Get All Accounts"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/BasicResponse"
+              - type: object
+                properties:
+                  data:
+                    allOf:
+                      - type: array
+                        items:
+                          allOf:
+                            - type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                bank_name:
+                                  type: string
+                                  example: "BCA"
+                                balance:
+                                  type: integer
+                                  example: 1500000
+                            - $ref: "#/components/schemas/DateModel"
+    GetDetailAccountResp:
+      description: "Get Detail Account"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/BasicResponse"
+              - type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/AccountModel"
+                      - $ref: "#/components/schemas/DateModel"
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            example: "Galuh"
+                          email:
+                            type: string
+                            example: "Galuh@gmail.com"
+                      history:
+                        type: object
+                        properties:
+                          sender:
+                            type: array
+                            items:
+                              allOf:
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    amount:
+                                      type: integer
+                                      example: 100000
+                                    source_account_id:
+                                      type: integer
+                                      example: 1
+                                    destination_account_id:
+                                      type: integer
+                                      example: 2
+                                - $ref: "#/components/schemas/DateModel"
+                          recive:
+                            type: array
+                            items:
+                              allOf:
+                                - type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    amount:
+                                      type: integer
+                                      example: 100000
+                                    source_account_id:
+                                      type: integer
+                                      example: 1
+                                    destination_account_id:
+                                      type: integer
+                                      example: 2
+                                - $ref: "#/components/schemas/DateModel"
+    CreateTransactionResp:
+      description: "Create new a transaction"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/BasicResponse"
+              - type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/TransactionModel"
+                      - $ref: "#/components/schemas/DateModel"
