@@ -1,4 +1,4 @@
-const joi = require('joi');
+const joi = require("joi");
 
 const createTransactionSchema = joi.object({
   source_account_id: joi.number().required(),

@@ -166,3 +166,43 @@ module.exports = {
   getUserById,
   updateUserProfile,
 };
+
+// const deleteUser = async (req, res, next) => {
+//   try {
+//     const userId = Number(req.params.userId);
+
+//     // Periksa apakah pengguna dengan ID yang diberikan ada dalam database
+//     const user = await prisma.users.findUnique({
+//       where: {
+//         id: userId,
+//       },
+//     });
+
+//     if (!user) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "User not found", data: null });
+//     }
+
+//     // Hapus pengguna
+//     await prisma.users.delete({
+//       where: {
+//         id: userId,
+//       },
+//     });
+
+//     res
+//       .status(200)
+//       .json({ success: true, message: "User deleted", data: null });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+// module.exports = {
+//   createUser,
+//   getUsers,
+//   getUserById,
+//   updateUserProfile,
+//   deleteUser, // Tambahkan fungsi delete ke dalam ekspor module
+// };

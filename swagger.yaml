@@ -2,7 +2,10 @@ openapi: 3.0.3
 info:
   title: Challenge Chapter 5
   description: |-
-    Welcome to My Home
+    Syarat:
+    1. Register
+    2. Login
+    3. Ambil Token lalu taruh authorize
   contact:
     email: galuhraka18@gmail.com
   version: 1.0.0
